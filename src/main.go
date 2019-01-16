@@ -3,24 +3,25 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/emvicom/hide"
+	"github.com/emvi/hide"
 	_ "github.com/lib/pq"
 	"log"
 )
 
 type Customer struct {
-	Id   hide.ID `json:"id"`
-	Name string  `json:"name"`
-	Age  int     `json:"age"`
+	Id       hide.ID `json:"id"`
+	Nullable hide.ID `json:"nullable"`
+	Name     string  `json:"name"`
+	Age      int     `json:"age"`
 }
 
 func main() {
 	db, _ := sql.Open("postgres", dbString())
 	defer db.Close()
 
-	customer := Customer{123, "Foobar", 36}
+	customer := Customer{123, 0, "Foobar", 36}
 
-	if _, err := db.Exec(`INSERT INTO "customer" (id, "name", age) VALUES ($1, $2, $3)`, customer.Id, customer.Name, customer.Age); err != nil {
+	if _, err := db.Exec(`INSERT INTO "customer" (id, "nullable", "name", age) VALUES ($1, $2, $3, $4)`, customer.Id, customer.Nullable, customer.Name, customer.Age); err != nil {
 		panic(err)
 	}
 
@@ -31,7 +32,7 @@ func main() {
 	}
 
 	rows.Next()
-	if err := rows.Scan(&customer.Id, &customer.Name, &customer.Age); err != nil {
+	if err := rows.Scan(&customer.Id, &customer.Nullable, &customer.Name, &customer.Age); err != nil {
 		panic(err)
 	}
 
