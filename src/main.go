@@ -64,6 +64,7 @@ func main() {
 	}
 
 	log.Println(hide.FromString(customerJson.Id))
+	log.Println(hide.ToString(hide.ID(123)))
 }
 
 func dbString() string {
